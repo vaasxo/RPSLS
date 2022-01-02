@@ -16,6 +16,7 @@ except socket.error as e:
 
 def get_input():
     player_input = input("Please enter your choice: ")
+    print(player_input.lower())
     if player_input.lower() not in possible_choices:
         player_input = input("Oops! You entered an invalid option, please choose from the following: rock, paper, "
                              "scissors, lizard, spock")
