@@ -29,9 +29,13 @@ while True:
     clientSocket.send(str.encode(player_choice))
 
     result = clientSocket.recv(1024)
-    server_choice = clientSocket.recv(1024)
-
     result.decode('UTF-8')
+
+    if result not in ("win", "lose", "tie"):
+        print(result)
+        continue
+
+    server_choice = clientSocket.recv(1024)
     server_choice.decode('UTF-8')
 
     if result == "win":
