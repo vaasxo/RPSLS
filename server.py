@@ -5,7 +5,7 @@ from _thread import *
 serverSocket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 HOST = '127.0.0.1'
-PORT = '4444'
+PORT = 4444
 
 threadNum = 0
 
@@ -44,18 +44,20 @@ def play_game(human_choice):
 
 
 def client_handler(connection):
-    player_choice = connection.recv(1024)
-    player_choice.decode('UTF-8')
+    while True:
+        player_choice = connection.recv(1024)
+        player_choice = player_choice.decode("utf-8")
 
-    if not player_choice:
-        print("message received is invalid, cannot decode!")
-        connection.sendall(str.encode("error in receiving the message! Try again"))
+        if not player_choice:
+            print("message received is invalid, cannot decode!")
+            connection.sendall(str.encode("error in receiving the message! Try again"))
+        else:
+            game_result, server_choice = play_game(player_choice)
+            connection.sendall(str.encode(game_result))
+            connection.sendall(str.encode(server_choice))
 
-    else:
-        game_result, server_choice = play_game(player_choice)
-        connection.sendall(str.encode(game_result))
-        connection.sendall(str.encode(server_choice))
-
+            if game_result in ("win", "lose"):
+                break
     connection.close()
 
 
@@ -66,11 +68,7 @@ while True:
     start_new_thread(client_handler, (conn,))
     threadNum += 1
 
-    conn.close()
     print("user with address: ", addr, " has disconnected")
-
-    if threadNum == 3:
-        break
 
 
 serverSocket.close()
