@@ -62,6 +62,9 @@ def client_handler(connection):
 
 
 while True:
+    if threadNum == 10:
+        break
+
     (conn, addr) = serverSocket.accept()
     print("user with address: ", addr, " has connected")
 
